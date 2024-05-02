@@ -1,0 +1,68 @@
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+.navbar {
+
+    position: relative;
+    padding: 0px;
+
+    display: flex;
+    justify-content: center;
+
+    user-select: none;
+
+    background-color: rgb(48, 48, 48);
+
+    box-sizing: border-box;
+
+    border-bottom: solid;
+    border-width: 10px;
+    border-color: rgb(48, 48, 48);
+
+
+
+
+}
+
+
+.ref, .ref_selected {
+
+
+    margin: 0px 5% 0px 5%;
+    padding: 1% 2.5% 1% 2.5%;
+
+    font-size: 40px;
+    font-weight: bold;
+    font-family: Helvetica, sans-serif;
+
+    border-top: solid;
+    border-bottom: solid;
+    border-width: 4px;
+    border-color: rgba(0, 0, 0, 0);
+    color: rgb(92, 116, 92);
+
+}
+
+
+@keyframes color_fade {
+    from {
+        color: rgb(92, 116, 92); 
+    }
+    to {
+        color: rgb(184, 184, 184);
+    }
+}
+
+.ref_selected, .ref:hover {
+    animation-name: color_fade;
+    animation-duration: 0.5s;
+
+    color: rgb(184, 184, 184);
+}
+
+.ref_selected {
+    border-top-color: rgb(74, 94, 74);
+    border-bottom-color: rgb(74, 94, 74);
+}
