@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Info.module.css"
+import { requestJson } from "../../util";
 
 export default class Info extends React.Component {
 
@@ -14,13 +15,10 @@ export default class Info extends React.Component {
     componentDidMount(){
         this.loadTexts();
 
-        fetch("http://localhost:3000/information").then((res) => {
-
-            res.json().then((data) => {
-                localStorage.setItem("data_information_texts", JSON.stringify(data))
-                this.loadTexts();
-            })
-
+    
+        requestJson("http://localhost:3000/information").then((data) => {
+            localStorage.setItem("data_information_texts", JSON.stringify(data))
+            this.loadTexts();
         })
 
     }
@@ -55,7 +53,6 @@ export default class Info extends React.Component {
         for(var i = 0; i < this.state.availableTextEntries.length; i++){
             const entry = this.state.availableTextEntries[i];
             const props = entry.props;
-            console.log(props.id)
 
             updated.push(<TextEntry key={props.id} id={props.id} sel_id={props.sel_id} selected={this.isTextSelected(props.id)} selectText={props.selectText} title={props.title}/>)
         }

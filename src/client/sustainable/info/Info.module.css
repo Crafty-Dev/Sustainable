@@ -34,6 +34,9 @@
 
 /*Text Navbar*/
 .text_navbar {
+
+    min-height: 40%;
+
     margin-top: 10px;
     padding: 10px 0px 10px 0px;
 
@@ -48,7 +51,6 @@
     box-shadow: 2px 2px 5px black;
 
     text-align: center;
-
 }
 
 .text_navbar_title {
