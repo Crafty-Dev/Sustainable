@@ -7,8 +7,13 @@
     justify-content: center;
 
     width: 50%; 
+    height: 90vh;
+    overflow-y: scroll;
 }
 
+.content::-webkit-scrollbar {
+    display: none;
+}
 
 
 /*Text*/
@@ -35,42 +40,42 @@
 /*Text Navbar*/
 .text_navbar {
 
-    min-height: 40%;
-
-    margin-top: 10px;
-    padding: 10px 0px 10px 0px;
 
     position: absolute;
-    left: 10px;
+    left: 0px;
 
+    height: 90vh;
+    width: 17.5%;
+    background-color: rgb(48, 48, 48);
 
-    box-sizing: border-box;
-    border: solid;
-    border-width: 1px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px black;
+    color: rgb(92, 116, 92);
 
     text-align: center;
 }
 
 .text_navbar_title {
 
+    margin-top: 10%;
+
+    color: rgb(184, 184, 184);
+
     user-select: none;
 
     padding: 5px 0px 10px 0px;
 
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 25px;
+    font-size: 35px;
     font-weight: bold;
 
 }
 
 .text_entry, .text_entry_selected {
 
-    padding: 2px 10px 2px 10px;
+    padding: 4px 10px 4px 10px;
 
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
+    font-size: 30px;
+
 
     user-select: none;
 }
@@ -78,7 +83,20 @@
 
 .text_entry:hover, .text_entry_selected {
 
-    background-color: rgb(228, 228, 228);
-
+    background-color: rgb(64, 64, 64);
+    color: rgb(184, 184, 184);
     cursor: default;
+
+    animation-name: color_fade;
+    animation-duration: 0.5s;
+}
+
+
+@keyframes color_fade {
+    from {
+        color: rgb(92, 116, 92); 
+    }
+    to {
+        color: rgb(184, 184, 184);
+    }
 }

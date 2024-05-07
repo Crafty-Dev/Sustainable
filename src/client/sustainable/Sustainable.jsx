@@ -3,6 +3,7 @@ import styles from "./Sustainable.module.css"
 import Ranking from "./ranking/Ranking.jsx";
 import Info from "./info/Info.jsx";
 import Home from "./home/Home.jsx";
+import Account from "./account/Account.jsx";
 
 export default class Sustainable extends React.Component {
 
@@ -28,6 +29,7 @@ export default class Sustainable extends React.Component {
                     <Ranking render={this.state.page === Pages.RANKING}/>
                     <Home render={this.state.page === Pages.HOME}/>
                     <Info render={this.state.page === Pages.INFORMATION}/>
+                    <Account/>
                 </div>
             </div>
         )

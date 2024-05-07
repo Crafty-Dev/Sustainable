@@ -6,8 +6,9 @@ body {
 .navbar {
 
     position: relative;
-    margin: 0px;
     padding: 0.5% 0px 0.5% 0px;
+
+    height: 10vh;
 
     display: flex;
     justify-content: center;
@@ -19,14 +20,13 @@ body {
     box-sizing: border-box;
 
 
-
-
-
 }
 
 
 .ref, .ref_selected {
 
+    display: flex;
+    align-items: center;
 
     margin: 0px 5% 0px 5%;
     padding: 1% 2.5% 1% 2.5%;

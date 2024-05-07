@@ -1,6 +1,7 @@
-import React from "react";
+import React, { createElement } from "react";
 import styles from "./Info.module.css"
 import { requestJson } from "../../util";
+import { parseHTML } from "jquery";
 
 export default class Info extends React.Component {
 
@@ -8,8 +9,7 @@ export default class Info extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {currentText: undefined, availableTexts: [], availableTextEntries: []}
-        this.generalInformation = this.generalInfo();
+        this.state = {currentText: undefined, availableTexts: [], availableTextEntries: [], generalInformation: undefined}
     }
 
     componentDidMount(){
@@ -23,19 +23,17 @@ export default class Info extends React.Component {
 
     }
 
-    generalInfo(){
-        return <InfoText title="Informationen" content={
-            "Dies ist eine allgemeine Information."
-        } refs={[]}/>
-    }
-
     loadTexts(){
 
 
         let available = [];
         let availableNavEntries = [];
 
+        if(localStorage.getItem("data_information_texts") === null || localStorage.getItem("data_information_texts") === undefined)
+            return;
+
         const json = JSON.parse(localStorage.getItem("data_information_texts"))
+        console.log(json)
         const texts = json["texts"];
 
         for(var i = 0; i < texts.length; i++){
@@ -44,7 +42,9 @@ export default class Info extends React.Component {
             availableNavEntries.push(<TextEntry key={text.id} id={text.id} sel_id={i} selected={this.isTextSelected(text.id)} selectText={this.selectText.bind(this)} title={text.title}/>)
         }
 
-        this.setState({availableTexts: available, availableTextEntries: availableNavEntries})
+        const generalInformation = json["generalInformation"];
+
+        this.setState({availableTexts: available, availableTextEntries: availableNavEntries, generalInformation: <InfoText title={generalInformation.title} content={generalInformation.content} refs={generalInformation.links}/>})
     }
 
     updateTextNavbar(){
@@ -87,7 +87,7 @@ export default class Info extends React.Component {
                     <div className={styles.text_navbar_title} onClick={() => this.selectText(-1)}>Infos</div>
                     {this.state.availableTextEntries}
                     </div>
-                <div className={styles.content}>{this.isTextDisplayed() ? this.state.currentText : this.generalInformation}</div>
+                <div className={styles.content}>{this.isTextDisplayed() ? this.state.currentText : this.state.generalInformation}</div>
             </div>
         )
     }
@@ -99,6 +99,13 @@ class InfoText extends React.Component {
         super(props)
     }
 
+    componentDidMount(){
+
+        const nodes = parseHTML(this.props.content)
+        for(var i = 0; i < nodes.length; i++){
+            document.getElementById("moin").append(nodes[i])
+        }
+    }
 
 
     render(){
@@ -106,7 +113,7 @@ class InfoText extends React.Component {
         return (
             <div>
                 <div className={styles.text_title}>{this.props.title}</div>
-                <div className={styles.text_content}>{this.props.content}</div>
+                <div id="moin" className={styles.text_content}></div>
                 <div className={styles.text_refs}>{this.props.refs}</div>
             </div>
         )

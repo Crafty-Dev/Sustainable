@@ -1,0 +1,264 @@
+
+.account, .account_expanded, .loginScreen {
+
+    position: absolute;
+
+    right: 10px;
+    bottom: 10px;
+
+
+    height: 10%;
+    width: 15%;
+
+    display: flex;
+    justify-content: center;
+
+
+    background-color: rgb(48, 48, 48);
+    border-color: rgb(92, 116, 92);
+    color: rgb(92, 116, 92);
+
+
+    box-sizing: border-box;
+    border: solid;
+    border-radius: 10px;
+
+    user-select: none;
+
+}
+
+.account_expanded {
+    border-top: none;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+
+    color: rgb(184, 184, 184);
+    border-color: rgb(92, 116, 92);
+}
+
+
+@keyframes color_fade {
+    from {
+        color: rgb(92, 116, 92); 
+    }
+    to {
+        color: rgb(184, 184, 184);
+    }
+}
+
+
+.account:hover {
+
+
+    color: rgb(184, 184, 184);
+    border-color: rgb(92, 116, 92);
+}
+
+
+.loggedOut, .loggedIn {
+
+    position: relative;
+
+    height: 100%;
+    width: 100%;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+
+.loggedOut {
+
+    display: flex;
+
+    transform: translateY(-4px);
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 40px;
+    font-weight: bold;
+
+}
+
+.loggedIn {
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+}
+
+.loggedIn_label {
+
+    color: rgb(184, 184, 184);
+    font-size: 20px;
+}
+
+.loggedIn_username {
+
+    margin-top: -px;
+
+    font-size: 35px;
+    font-weight: bold;
+}
+
+
+
+/*Login Screen*/
+.loginScreen {
+
+    display: block;
+    text-align: center;
+
+    z-index: -1;
+
+    height: 65%;
+    /*animation-name: expand;
+    animation-duration: 0.5s;*/
+    overflow-y: hidden;
+}
+
+@keyframes expand {
+    from {
+        height: 15%;
+    }
+    to {
+        height: 65%;
+    }
+}
+
+.signIn_Up_switch {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    margin-top: 5px;
+    padding: 2px;
+
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+
+    border: solid;
+    border-width: 2px;
+    border-radius: 17px;
+
+}
+
+
+.switch_inactive, .switch_active {
+
+    padding: 5px 10px 5px 10px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+
+    box-sizing: border-box;
+    border: solid;
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 15px;
+}
+
+.switch_inactive {
+
+}
+
+.switch_active {
+    
+    background-color: rgb(32, 32, 32);
+    border-color: rgb(64, 64, 64);
+}
+
+
+.sign_in, .sign_up {
+
+    position: relative;
+
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+
+
+}
+
+
+.sign_title {
+
+    position: relative;
+    width: 100%;
+
+    margin: 10px 0px 20px 0px;
+
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.sign_label {
+
+    position: relative;
+    width: 100%;
+
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+.sign_input {
+
+    position: relative;
+    width: 100%;
+
+    margin-bottom: 20px;
+    padding: 2px;
+
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    box-sizing: border-box;
+
+    border: solid;
+    border-radius: 10px;
+
+    color: rgb(184, 184, 184);
+    border-color: rgb(64, 64, 64);
+    background-color: rgb(32, 32, 32);
+}
+
+
+.sign_input:focus {
+    outline: none;
+}
+
+.sign_confirm {
+
+    position: relative;
+    width: 110%;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 5px 0px 5px 0px;
+
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    box-sizing: border-box;
+
+    border: solid;
+    border-radius: 10px;
+
+    border-color: rgb(64, 64, 64);
+    background-color: rgb(32, 32, 32);
+}
+
+.sign_confirm:hover {
+
+    animation-name: color_fade;
+    animation-duration: 0.5s;
+
+    color: rgb(184, 184, 184);
+}
