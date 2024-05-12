@@ -21,7 +21,9 @@ export default class Info extends React.Component {
             this.loadTexts();
         })
 
+
     }
+
 
     loadTexts(){
 
@@ -95,7 +97,9 @@ class TextNavbar extends React.Component {
 
     constructor(props){
         super(props)
+
     }
+
 
     render(){
 
@@ -153,7 +157,7 @@ class TextEntry extends React.Component {
 
 
         return (
-            <div className={this.props.selected ? styles.text_entry_selected : styles.text_entry} onClick={() => this.props.selectText(this.props.sel_id)}>{this.props.title}</div>
+            <div name="text_entry" className={this.props.selected ? styles.text_entry_selected : styles.text_entry} onClick={() => this.props.selectText(this.props.sel_id)}>{this.props.title}</div>
         )
     }
 

@@ -51,7 +51,6 @@
 
     position: absolute;
 
-    white-space: nowrap;
 
     left: 0px;
     top: 10vh;
@@ -62,7 +61,6 @@
     height: 90vh;
     width: 15vw;
 
-    overflow-x: hidden;
 
     box-sizing: border-box;
 
@@ -70,6 +68,8 @@
     color: rgb(92, 116, 92);
 
     text-align: center;
+
+    overflow: hidden;
 
     animation-name: expand_text_navbar;
     animation-duration: 0.5s;
@@ -83,6 +83,7 @@
         width: 15vw;
     }
 }
+
 
 .text_navbar_title {
 
@@ -101,15 +102,19 @@
 
 .text_entry, .text_entry_selected {
 
-    padding: 8px 10px 8px 10px;
+    padding: 8px 0.5vw 8px 0.5vw;
 
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
+    font-size: 25px;
 
+    width: 14vw;
 
     user-select: none;
 }
 
+.text_entry::-webkit-scrollbar, .text_entry_selected::-webkit-scrollbar {
+    display: none;
+}
 
 .text_entry:hover, .text_entry_selected {
 
