@@ -9,7 +9,7 @@ export default class Info extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {currentText: undefined, availableTexts: [], availableTextEntries: [], generalInformation: undefined}
+        this.state = {currentText: undefined, availableTexts: [], availableTextEntries: [], generalInformation: undefined, navbar_expanded: false}
     }
 
     componentDidMount(){
@@ -33,7 +33,6 @@ export default class Info extends React.Component {
             return;
 
         const json = JSON.parse(localStorage.getItem("data_information_texts"))
-        console.log(json)
         const texts = json["texts"];
 
         for(var i = 0; i < texts.length; i++){
@@ -83,14 +82,35 @@ export default class Info extends React.Component {
 
         return (
             <div>
-                <div className={styles.text_navbar}>
-                    <div className={styles.text_navbar_title} onClick={() => this.selectText(-1)}>Infos</div>
-                    {this.state.availableTextEntries}
-                    </div>
+                <TextNavbar render={this.state.navbar_expanded} entries={this.state.availableTextEntries} selectText={this.selectText.bind(this)}/>
+                <div id="extender" className={`${styles.navbar_extender} ${this.state.navbar_expanded ? styles.navbar_extender_active : ""}`} onClick={() => this.setState({navbar_expanded: !this.state.navbar_expanded})}>{">"}</div>
                 <div className={styles.content}>{this.isTextDisplayed() ? this.state.currentText : this.state.generalInformation}</div>
             </div>
         )
     }
+
+}
+
+class TextNavbar extends React.Component {
+
+    constructor(props){
+        super(props)
+    }
+
+    render(){
+
+        if(!this.props.render)
+            return null;
+
+
+        return (
+            <div className={styles.text_navbar}>
+                <div className={styles.text_navbar_title} onClick={() => this.props.selectText(-1)}>Infos</div>
+                {this.props.entries}
+            </div>
+        )
+    }
+
 }
 
 class InfoText extends React.Component {

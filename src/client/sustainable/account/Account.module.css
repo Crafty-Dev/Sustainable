@@ -1,11 +1,10 @@
-
 .account, .account_expanded, .loginScreen {
 
     position: absolute;
-
     right: 10px;
     bottom: 10px;
 
+    z-index: 2;
 
     height: 10%;
     width: 15%;
@@ -113,9 +112,9 @@
     display: block;
     text-align: center;
 
-    z-index: -1;
+    z-index: 1;
 
-    height: 65%;
+    height: 70%;
     /*animation-name: expand;
     animation-duration: 0.5s;*/
     overflow-y: hidden;
@@ -261,4 +260,9 @@
     animation-duration: 0.5s;
 
     color: rgb(184, 184, 184);
+}
+
+.status_message {
+    padding-bottom: 5px;
+    color: rgb(207, 104, 104);
 }

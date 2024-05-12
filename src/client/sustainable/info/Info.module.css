@@ -29,6 +29,8 @@
 }
 
 .text_content {
+
+    padding: 2.5%;
     
     text-align: justify;
     white-space: pre-line;
@@ -42,36 +44,58 @@
 
 
     position: absolute;
+
+    white-space: nowrap;
+
     left: 0px;
+    top: 10vh;
+
+
+    z-index: 1;
 
     height: 90vh;
-    width: 17.5%;
-    background-color: rgb(48, 48, 48);
+    width: 15vw;
 
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+
+    background-color: rgb(48, 48, 48);
     color: rgb(92, 116, 92);
 
     text-align: center;
+
+    animation-name: expand_text_navbar;
+    animation-duration: 0.5s;
+}
+
+@keyframes expand_text_navbar {
+    from {
+        width: 2.5vw;
+    }
+    to {
+        width: 15vw;
+    }
 }
 
 .text_navbar_title {
 
-    margin-top: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     color: rgb(184, 184, 184);
 
     user-select: none;
 
-    padding: 5px 0px 10px 0px;
-
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: bold;
 
 }
 
 .text_entry, .text_entry_selected {
 
-    padding: 4px 10px 4px 10px;
+    padding: 8px 10px 8px 10px;
 
     font-family: Arial, Helvetica, sans-serif;
     font-size: 30px;
@@ -100,3 +124,68 @@
         color: rgb(184, 184, 184);
     }
 }
+
+.navbar_extender {
+
+    position: absolute;
+    text-align: center;
+
+    top: 55vh;
+    transform: translateY(-50%);
+
+    padding: 5px 5px 5px 5px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    height: 7.5vh;
+
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+    box-sizing: border-box;
+    border: solid;
+    border-left: none;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-width: 3px;
+
+    background-color: rgb(48, 48, 48);
+    border-color: rgb(92, 116, 92);
+    color: rgb(184, 184, 184);
+
+    user-select: none;
+}
+
+.navbar_extender_active {
+    left: 15vw;
+
+    animation-name: expand_navbar_extender;
+    animation-duration: 0.5s;
+}
+
+.navbar_extender:hover {
+    box-shadow: 2px 2px 5px rgb(92, 116, 92);
+
+}
+
+@keyframes shadow_fade {
+    from {
+        box-shadow: 0px 0px 0px rgb(92, 116, 92);
+    }
+    to {
+        box-shadow: 2px 2px 5px rgb(92, 116, 92);
+    }
+}
+
+@keyframes expand_navbar_extender {
+    from {
+        left: 2.5vw;
+    }
+    to {
+        left: 15vw;
+    }
+}
+
