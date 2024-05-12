@@ -115,8 +115,8 @@
     z-index: 1;
 
     height: 70%;
-    /*animation-name: expand;
-    animation-duration: 0.5s;*/
+    animation-name: expand;
+    animation-duration: 0.5s;
     overflow-y: hidden;
 }
 
@@ -125,7 +125,7 @@
         height: 15%;
     }
     to {
-        height: 65%;
+        height: 70%;
     }
 }
 
