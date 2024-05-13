@@ -1,7 +1,7 @@
 import React, { createElement } from "react";
 import styles from "./Info.module.css"
-import { requestJson } from "../../util";
 import { parseHTML } from "jquery";
+import { requestJson } from "../../logic/requestUtils.js";
 
 export default class Info extends React.Component {
 

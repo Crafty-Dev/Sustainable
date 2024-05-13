@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Account.module.css"
-import { ActionResult, getStatusText, postJson } from "../../util.js";
+import { ActionResult, getStatusText, postJson } from "../../logic/requestUtils.js";
+import { performSignUp } from "../../logic/accountManager.js";
 
 export default class Account extends React.Component {
 
@@ -10,6 +11,8 @@ export default class Account extends React.Component {
 
         this.state = {expanded: false, account: undefined}
     }
+
+
 
 
     render(){
@@ -216,21 +219,6 @@ class SignIn extends React.Component {
 
     async performLogin(){
 
-        const res = await this.performLoginRequest();
-        if(res.status !== ActionResult.SUCCESS){
-            this.setStatusMessage(res.status)
-            return;
-        }
-
-        if(!("accessToken" in res))
-            this.setStatusMessage(ActionResult.INVALID_ACCESS_TOKEN)
-        else
-            this.props.handleSuccess(res.accessToken);
-
-    }
-
-    async performLoginRequest(){
-
         const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if(this.state.email === undefined || !pattern.test(this.state.email))
@@ -239,18 +227,8 @@ class SignIn extends React.Component {
         if(this.state.password === undefined)
             return {status: ActionResult.INVALID_PASSWORD};
 
-        const body = JSON.stringify({
-            email: this.state.email,
-            password: this.state.password
-        })
 
-        const res = await postJson("http://localhost:3000/account/signIn", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: body
-        })
+        const res = await performSignIn(this.state.email, this.state.password);
 
         if(res === null)
             return {status: ActionResult.FAILED};
@@ -306,22 +284,6 @@ class SignUp extends React.Component {
 
     async performSignUp(){
 
-        const res = await this.performSignUpRequest();
-        if(res.status !== ActionResult.SUCCESS){
-            this.setStatusMessage(res.status)
-            return;
-        }
-
-        if(!("accessToken" in res))
-            this.setStatusMessage(ActionResult.INVALID_ACCESS_TOKEN)
-        else
-            this.props.handleSuccess(res.accessToken);
-
-    }
-
-
-    async performSignUpRequest(){
-
 
         if(this.state.password !== this.state.rep_password)
             return {status: ActionResult.PASSWORDS_NOT_MATCHING};
@@ -337,19 +299,8 @@ class SignUp extends React.Component {
         if(this.state.password === undefined)
             return {status: ActionResult.INVALID_PASSWORD};
 
-        const body = JSON.stringify({
-            email: this.state.email,
-            username: this.state.username,
-            password: this.state.password
-        })
 
-        const res = await postJson("http://localhost:3000/account/signUp", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: body
-        })
+        const res = await performSignUp(this.state.email, this.state.password, this.state.username);
 
         if(res === null)
             return {status: ActionResult.FAILED};
