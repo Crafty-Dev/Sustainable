@@ -42,71 +42,9 @@ export default class Account extends React.Component {
         )
     }
 
-    componentDidMount(){
-        this.loadAccountFromCache();
-    }
-
-    async loadAccountFromCache(){
-
-        if(sessionStorage.getItem("accountCache") === null || sessionStorage.getItem("accountCache") === undefined)
-            return;
-
-        let accountData = JSON.parse(sessionStorage.getItem("accountCache"));
-
-        this.setState({account: accountData})
-
-        const res = await this.refreshAccessToken(accountData.accessToken);
-
-        if(res.status === ActionResult.SUCCESS){
-            accountData["accessToken"] = res.refreshedToken;
-            sessionStorage.setItem("accountCache", JSON.stringify(accountData))
-        }
-
-        if(res.status !== ActionResult.SUCCESS){
-            accountData = undefined;
-            sessionStorage.removeItem("accountCache")
-        }
-
-        this.setState({account: accountData})
-    }
-
-    async refreshAccessToken(oldAccessToken){
-
-        const body = JSON.stringify({
-            accessToken: oldAccessToken
-        })
-
-        return await postJson("http://localhost:3000/account/refreshToken", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: body
-        })
-    }
-
-    async handleSuccess(accessToken) {
-        
-        const body = JSON.stringify({
-            accessToken: accessToken
-        })
-
-        const res = await postJson("http://localhost:3000/account/info", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: body
-        })
-
-        const accountData = res;
-        delete accountData["status"]
-        accountData["accessToken"] = accessToken;
-
-
-        sessionStorage.setItem("accountCache", JSON.stringify(accountData))
-        this.setState({account: accountData, expanded: false})
-
+    handleSuccess(data){
+        console.log(data + ">>>")
+        this.setState({account: data, expanded: false})
     }
 
 }
@@ -243,7 +181,7 @@ class SignUp extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {email: undefined, username: undefined, password: undefined, rep_password: undefined, statusMsg: undefined}
+        this.state = {email: undefined, username: undefined, password: undefined, rep_password: undefined, statusMsg: undefined, processing: false}
     }
 
     render(){
@@ -271,7 +209,7 @@ class SignUp extends React.Component {
                     this.setState({rep_password: e.currentTarget.value})
                 }}/>
                 {this.state.statusMsg}
-                <div className={styles.sign_confirm} onClick={() => this.performSignUp()}>Registrieren</div>
+                <div className={this.state.processing ? styles.sign_confirm_processing : styles.sign_confirm} onClick={() => this.signUp()}>Registrieren</div>
             </div>
         )
     }
@@ -282,12 +220,32 @@ class SignUp extends React.Component {
 
     }
 
+    async signUp(){
+
+        if(this.state.processing)
+            return;
+
+        this.setState({processing: true})
+
+        console.log("Start SignUp")
+        const res = await this.performSignUp();
+        console.log(res)
+        if(res.status !== ActionResult.SUCCESS)
+            this.setStatusMessage(res.status)
+        else
+            this.props.handleSuccess(res.data);
+
+        this.setState({processing: false})
+    }
+
     async performSignUp(){
+
 
 
         if(this.state.password !== this.state.rep_password)
             return {status: ActionResult.PASSWORDS_NOT_MATCHING};
 
+        console.log(1)
         const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if(this.state.email === undefined || !pattern.test(this.state.email))
