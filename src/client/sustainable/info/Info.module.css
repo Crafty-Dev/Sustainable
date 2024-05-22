@@ -8,7 +8,19 @@
 
     width: 50vw;
     overflow-y: scroll;
-    height: 90vh;
+    height: 86vh;
+
+    background-color: white;
+    padding: 0px 5% 0px 5%;
+
+    border: solid;
+    border-radius: 10px;
+    border-color: rgb(32, 32, 32);
+    box-sizing: border-box;
+
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+
 }
 
 .content::-webkit-scrollbar {
@@ -64,8 +76,8 @@
 
     box-sizing: border-box;
 
-    background-color: rgb(48, 48, 48);
-    color: rgb(92, 116, 92);
+    background-color: rgb(32, 32, 32);
+    color: rgb(92, 105, 116);
 
     text-align: center;
 
@@ -129,7 +141,7 @@
 
 @keyframes color_fade {
     from {
-        color: rgb(92, 116, 92); 
+        color: rgb(92, 105, 116); 
     }
     to {
         color: rgb(184, 184, 184);
@@ -163,8 +175,8 @@
     border-bottom-right-radius: 20px;
     border-width: 3px;
 
-    background-color: rgb(48, 48, 48);
-    border-color: rgb(92, 116, 92);
+    background-color: rgb(32, 32, 32);
+    border-color: rgb(92, 105, 116);
     color: rgb(184, 184, 184);
 
     user-select: none;
@@ -178,16 +190,16 @@
 }
 
 .navbar_extender:hover {
-    box-shadow: 2px 2px 5px rgb(92, 116, 92);
+    box-shadow: 2px 2px 5px rgb(92, 105, 116);
 
 }
 
 @keyframes shadow_fade {
     from {
-        box-shadow: 0px 0px 0px rgb(92, 116, 92);
+        box-shadow: 0px 0px 0px rgb(92, 105, 116);
     }
     to {
-        box-shadow: 2px 2px 5px rgb(92, 116, 92);
+        box-shadow: 2px 2px 5px rgb(92, 105, 116);
     }
 }
 

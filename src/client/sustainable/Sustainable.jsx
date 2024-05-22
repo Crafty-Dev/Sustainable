@@ -11,7 +11,7 @@ export default class Sustainable extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {page: Pages.INFORMATION}
+        this.state = {page: Pages.HOME}
     }
 
 

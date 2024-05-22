@@ -1,6 +1,12 @@
 body {
     padding: 0px;
     margin: 0px;
+
+    background-image: url("background.jpg");
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 .navbar {
@@ -15,7 +21,7 @@ body {
 
     user-select: none;
 
-    background-color: rgb(48, 48, 48);
+    background-color: rgb(32, 32, 32);
 
     box-sizing: border-box;
 
@@ -27,9 +33,13 @@ body {
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
     margin: 0px 5% 0px 5%;
-    padding: 1% 2.5% 1% 2.5%;
+    padding: 0.5% 2.5% 0.5% 2.5%;
+
+    width: 20vw;
+    box-sizing: border-box;
 
     font-size: 40px;
     font-weight: bold;
@@ -39,14 +49,14 @@ body {
     border-bottom: solid;
     border-width: 4px;
     border-color: rgba(0, 0, 0, 0);
-    color: rgb(92, 116, 92);
+    color: rgb(92, 105, 116);
 
 }
 
 
 @keyframes color_fade {
     from {
-        color: rgb(92, 116, 92); 
+        color: rgb(92, 105, 116); 
     }
     to {
         color: rgb(184, 184, 184);
@@ -61,6 +71,6 @@ body {
 }
 
 .ref_selected {
-    border-top-color: rgb(74, 94, 74);
-    border-bottom-color: rgb(74, 94, 74);
+    border-top-color: rgb(92, 105, 116);
+    border-bottom-color: rgb(92, 105, 116);
 }

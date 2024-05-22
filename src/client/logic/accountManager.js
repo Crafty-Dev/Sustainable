@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { ActionResult } from "./requestUtils.js";
 import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "./init.js";
@@ -9,6 +9,7 @@ export async function performSignUp(email, password, username){
         return {status: ActionResult.EMAIL_ALREADY_IN_USE}
 
     const auth = getAuth();
+    setPersistence(auth, browserSessionPersistence);
 
     const credentials = await createUserWithEmailAndPassword(auth, email, password);
     await setDoc(doc(collection(db, "accounts"), credentials.user.uid), {
@@ -23,12 +24,18 @@ export async function performSignUp(email, password, username){
 
 export async function performSignIn(email, password){
 
-    const auth = getAuth();
-    const credentials = await signInWithEmailAndPassword(auth, email, password);
+    if(!checkExistance(email))
+        return {status: ActionResult.EMAIL_NOT_EXISTANT};
 
-    return {
-        status: ActionResult.SUCCESS
+    const auth = getAuth();
+    setPersistence(auth, browserSessionPersistence)
+    try {
+        const credentials = await signInWithEmailAndPassword(auth, email, password);
+        return await retrieveAccountInfo(credentials.user.uid);
+    }catch(e){
+        return {status: ActionResult.INVALID_PASSWORD};
     }
+
 }
 
 async function checkExistance(email){
@@ -36,7 +43,7 @@ async function checkExistance(email){
     return !(await getDocs(q)).empty;
 }
 
-async function retrieveAccountInfo(userId){
+export async function retrieveAccountInfo(userId){
 
     const docRef = doc(collection(db, "accounts"), userId)
     const snapshot = await getDoc(docRef);
@@ -47,4 +54,15 @@ async function retrieveAccountInfo(userId){
         status: ActionResult.SUCCESS,
         data: snapshot.data()
     };
+}
+
+export async function performLogout(){
+
+    const auth = getAuth();
+    if(!auth.currentUser)
+        return {status: ActionResult.FAILED};
+
+
+    await signOut(auth);
+    return {status: ActionResult.SUCCESS}
 }

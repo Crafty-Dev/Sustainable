@@ -1,0 +1,24 @@
+.stats {
+
+    position: absolute;
+
+    right: 0px;
+    top: 10vh;
+    height: 90vh;
+    width: 17.5vw;
+
+    background-color: rgb(32, 32, 32);
+    user-select: none;
+}
+
+.title {
+
+    text-align: center;
+
+    font-size: 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+
+    color: rgb(92, 105, 116);
+
+}

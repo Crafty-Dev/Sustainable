@@ -1,4 +1,8 @@
 import React from "react";
+import styles from "./Home.module.css"
+import Follower from "./follower/Follower";
+import Stats from "./stats/Stats";
+import Feed from "./feed/Feed";
 
 
 
@@ -15,8 +19,10 @@ export default class Home extends React.Component {
             return null;
 
         return (
-            <div>
-                Home
+            <div className={styles.home}>
+                <Follower/>
+                <Feed/>
+                <Stats/>
             </div>
         )
 

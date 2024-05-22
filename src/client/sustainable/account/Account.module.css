@@ -1,21 +1,21 @@
-.account, .account_expanded, .loginScreen {
+.account, .account_expanded, .loginScreen, .logoutScreen {
 
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 1.25vw;
+    bottom: 1%;
 
     z-index: 2;
 
     height: 10%;
-    width: 15%;
+    width: 15vw;
 
     display: flex;
     justify-content: center;
 
 
-    background-color: rgb(48, 48, 48);
-    border-color: rgb(92, 116, 92);
-    color: rgb(92, 116, 92);
+    background-color: rgb(32, 32, 32);
+    border-color: rgb(92, 105, 116);
+    color: rgb(92, 105, 116);
 
 
     box-sizing: border-box;
@@ -32,13 +32,12 @@
     border-top-right-radius: 0px;
 
     color: rgb(184, 184, 184);
-    border-color: rgb(92, 116, 92);
+    border-color: rgb(92, 105, 116);
 }
-
 
 @keyframes color_fade {
     from {
-        color: rgb(92, 116, 92); 
+        color: rgb(92, 105, 116); 
     }
     to {
         color: rgb(184, 184, 184);
@@ -50,7 +49,7 @@
 
 
     color: rgb(184, 184, 184);
-    border-color: rgb(92, 116, 92);
+    border-color: rgb(92, 105, 116);
 }
 
 
@@ -107,27 +106,24 @@
 
 
 /*Login Screen*/
-.loginScreen {
+.loginScreen, .logoutScreen {
 
     display: block;
     text-align: center;
 
     z-index: 1;
 
-    height: 70%;
-    animation-name: expand;
-    animation-duration: 0.5s;
+    height: fit-content;
+    padding-top: 0.5%;
+    padding-bottom: 2.5%;
+    bottom: 11%;
     overflow-y: hidden;
+
+    border-bottom: none;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
-@keyframes expand {
-    from {
-        height: 15%;
-    }
-    to {
-        height: 70%;
-    }
-}
 
 .signIn_Up_switch {
     position: relative;
@@ -232,7 +228,7 @@
     outline: none;
 }
 
-.sign_confirm, .sign_confirm_processing {
+.sign_confirm, .sign_confirm_processing, .accountSettings, .logout {
 
     position: relative;
     width: 110%;
@@ -258,7 +254,7 @@
     opacity: 50%;
 }
 
-.sign_confirm:hover {
+.sign_confirm:hover, .accountSettings:hover, .logout:hover {
 
     animation-name: color_fade;
     animation-duration: 0.5s;
@@ -269,4 +265,20 @@
 .status_message {
     padding-bottom: 5px;
     color: rgb(207, 104, 104);
+}
+
+
+.accountSettings, .logout {
+
+    margin: 5% 0px 5% 0px;
+    width: 80%;
+
+}
+
+.accountSettings {
+    margin-top: 20%;
+}
+
+.logout {
+    margin-bottom: 20%;
 }

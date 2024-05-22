@@ -1,0 +1,173 @@
+.feed {
+
+    position: absolute;
+
+    top: 10vh;
+    left: 17.5vw;
+
+    height: 90vh;
+    width: 65vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+  
+.post {
+
+    position: relative;  
+    width: 50%;
+    height: 95%;
+
+    border-radius: 25px;
+
+    border: solid;
+    border-width: 3px;
+
+    border-color: rgb(92, 105, 116);
+    background-color: rgb(32, 32, 32);
+
+    box-sizing: border-box;
+
+}
+
+.prev, .next {
+    position: relative;
+    height: 5%;
+
+    box-sizing: border-box;
+
+    padding: 5px 0px 5px 0px;
+    margin: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    user-select: none;
+}
+
+.prev {
+    border-bottom: solid;
+    border-color: rgb(92, 105, 116);
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+}
+
+.next {
+    border-top: solid;
+    border-color: rgb(92, 105, 116);
+    border-bottom-left-radius: 22px;
+    border-bottom-right-radius: 22px;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgb(16, 16, 16);
+}
+
+.prev img, .next img {
+    width: 10%;
+    height: 50%;
+    
+
+}
+
+.next img {
+    transform: rotate(180deg);
+}
+
+.content_bg {
+
+    position: relative;
+    height: 90%;
+
+}
+.content {
+    position: relative;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.content_pic_bg {
+    position: relative;
+
+    left: 50%;
+    transform: translate(-50%);
+
+    border-top: solid;
+    border-bottom: solid;
+    border-color: rgb(92, 105, 116);
+    box-sizing: border-box;
+
+    z-index: 1;
+    height: 50vh;
+    width: 100%;
+    overflow: hidden;
+
+}
+
+.content_pic, .content_pic_blured_top, .content_pic_blured_bottom {
+    position: relative;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 97.5%;
+    max-height: 50vh;
+}
+
+.content_pic {
+    max-width: 100%;
+}
+
+.content_pic_blured_top, .content_pic_blured_bottom {
+    position: absolute;
+    filter: blur(8px);
+}
+
+.content_pic_blured_top {
+    top: 12.5vh;
+}
+
+.content_pic_blured_bottom {
+    top: 37.5vh;
+}
+
+.user {
+
+    padding: 5px 0px 0px 5px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    color: rgb(184, 184, 184);
+
+}
+
+.date {
+    padding: 0px 0px 10px 5px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: rgb(146, 146, 146);
+}
+
+.subtitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: rgb(184, 184, 184);
+
+    padding: 10px 0px 5px 5px;
+    display: flex;
+}
+
+.subtitle_user {
+    padding-right: 5px;
+}

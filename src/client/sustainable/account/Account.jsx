@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Account.module.css"
-import { ActionResult, getStatusText, postJson } from "../../logic/requestUtils.js";
-import { performSignUp } from "../../logic/accountManager.js";
+import { ActionResult, getStatusText } from "../../logic/requestUtils.js";
+import { performLogout, performSignIn, performSignUp, retrieveAccountInfo } from "../../logic/accountManager.js";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default class Account extends React.Component {
 
@@ -10,9 +11,22 @@ export default class Account extends React.Component {
         super(props)
 
         this.state = {expanded: false, account: undefined}
+
+
     }
 
 
+    componentDidMount(){
+
+        this.stopAuthListener = onAuthStateChanged(getAuth(), async (user) => {
+            if(user)
+                this.setState({account: (await retrieveAccountInfo(user.uid)).data})
+        })
+    }
+
+    componentWillUnmount(){
+        this.stopAuthListener();
+    }
 
 
     render(){
@@ -27,7 +41,7 @@ export default class Account extends React.Component {
                         
                         document.getElementById("account_btn").animate([
                             {
-                                color: "rgb(92, 116, 92)"
+                                color: "rgb(92, 105, 116)"
                             },
                             {
                                 color: "rgb(184, 184, 184)"
@@ -36,15 +50,23 @@ export default class Account extends React.Component {
                 }}>
                 {this.state.account !== undefined ? <UserLoggedIn username={this.state.account.username}/> : <UserLoggedOut/>}
                 </div>
-                <LoginScreen render={this.state.expanded && this.state.account === undefined} handleSuccess={this.handleSuccess.bind(this)}/>
+                <LoginScreen render={this.state.expanded && !this.loggedIn()} handleSuccess={this.handleLoginSuccess.bind(this)}/>
+                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)}/>
             </div>
 
         )
     }
 
-    handleSuccess(data){
-        console.log(data + ">>>")
+    loggedIn(){
+        return this.state.account !== undefined;
+    }
+
+    handleLoginSuccess(data){
         this.setState({account: data, expanded: false})
+    }
+
+    handleLogoutSuccess(){
+        this.setState({account: undefined, expanded: false})
     }
 
 }
@@ -123,7 +145,7 @@ class SignIn extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {email: undefined, password: undefined, statusMsg: undefined}
+        this.state = {email: undefined, password: undefined, statusMsg: undefined, processing: false}
     }
 
     render(){
@@ -143,7 +165,7 @@ class SignIn extends React.Component {
                     this.setState({password: e.currentTarget.value})
                 }}/>
                 {this.state.statusMsg}
-                <div className={styles.sign_confirm} onClick={() => this.performLogin()}>Anmelden</div>
+                <div className={this.state.processing ? styles.sign_confirm_processing : styles.sign_confirm} onClick={() => this.login()}>Anmelden</div>
             </div>
         )
     }
@@ -155,7 +177,26 @@ class SignIn extends React.Component {
 
     }
 
+    async login(){
+        
+        if(this.state.processing)
+            return;
+
+        this.setState({processing: true})
+
+        const res = await this.performLogin();
+        console.log(res)
+        if(res.status !== ActionResult.SUCCESS)
+            this.setStatusMessage(res.status)
+        else
+            this.props.handleSuccess(res.data);
+
+        this.setState({processing: false})
+
+    }
+
     async performLogin(){
+
 
         const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -227,7 +268,6 @@ class SignUp extends React.Component {
 
         this.setState({processing: true})
 
-        console.log("Start SignUp")
         const res = await this.performSignUp();
         console.log(res)
         if(res.status !== ActionResult.SUCCESS)
@@ -267,6 +307,35 @@ class SignUp extends React.Component {
     }
 }
 
+class LogoutScreen extends React.Component {
+
+    constructor(props){
+        super(props)
+    }
+
+
+    render(){
+
+        if(!this.props.render)
+            return null;
+
+        return (
+            <div className={styles.logoutScreen}>
+                <div className={styles.sign_title}>Account Optionen</div>
+                <div className={styles.accountSettings}>Einstellungen</div>
+                <div className={styles.logout} onClick={() => this.performLogout()}>Abmelden</div>
+            </div>
+        )
+    }
+
+    async performLogout(){
+
+        const res = await performLogout();
+        if(res.status === ActionResult.SUCCESS)
+            this.props.handleSuccess();
+    }
+
+}
 
 class StatusMessage extends React.Component {
 
