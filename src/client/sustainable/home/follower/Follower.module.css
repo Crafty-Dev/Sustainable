@@ -19,6 +19,16 @@
 
 }
 
+.list {
+    height: 80%;
+
+    overflow: scroll;
+    box-sizing: border-box;
+}
+
+.list::-webkit-scrollbar {
+    display: none;
+}
 
 .title {
 
@@ -27,5 +37,45 @@
     font-weight: bold;
 
     color: rgb(92, 105, 116);
+
+}
+
+
+.follower_entry {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.username {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    color: rgb(184, 184, 184);
+
+}
+
+.profile_pic {
+    width: 10%;
+    height: auto;
+    aspect-ratio: 1;
+
+    margin-right: 10px;
+
+    border: solid;
+    border-color: rgb(92, 105, 116);
+    border-width: 2px;
+    border-radius: 10px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+
+.profile_pic img {
+    max-height: 100%;
+    max-width: 100%;
 
 }
