@@ -1,5 +1,5 @@
 .content {
-    position: relative;
+    position: absolute;
     left: 50%;
     transform: translate(-50%);
 
@@ -45,7 +45,6 @@
     position: relative;
     padding-bottom: 2.5%;
     
-    max-width: 50vw;
     text-align: justify;
 
     font-size: 25px;

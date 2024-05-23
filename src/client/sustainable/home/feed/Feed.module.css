@@ -126,6 +126,7 @@
 
 .content_pic {
     max-width: 100%;
+    border-radius: 10px;
 }
 
 .content_pic_blured_top, .content_pic_blured_bottom {
