@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Account.module.css"
-import { ActionResult, getStatusText } from "../../logic/requestUtils.js";
+import { ActionResult, getStatusText, postJson } from "../../logic/requestUtils.js";
 import { performLogout, performSignIn, performSignUp, retrieveAccountInfo } from "../../logic/accountManager.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -10,7 +10,7 @@ export default class Account extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {expanded: false, account: undefined}
+        this.state = {expanded: true, account: undefined}
 
 
     }
@@ -19,8 +19,16 @@ export default class Account extends React.Component {
     componentDidMount(){
 
         this.stopAuthListener = onAuthStateChanged(getAuth(), async (user) => {
-            if(user)
-                this.setState({account: (await retrieveAccountInfo(user.uid)).data})
+            if(user){
+                const data = (await retrieveAccountInfo(user.uid)).data;
+
+                console.log(data)
+
+                if(data["profilePic"] === undefined)
+                    data["profilePic"] = "defaultPP.png"
+
+                this.setState({account: data})
+            }
         })
     }
 
@@ -51,7 +59,7 @@ export default class Account extends React.Component {
                 {this.state.account !== undefined ? <UserLoggedIn username={this.state.account.username}/> : <UserLoggedOut/>}
                 </div>
                 <LoginScreen render={this.state.expanded && !this.loggedIn()} handleSuccess={this.handleLoginSuccess.bind(this)}/>
-                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)}/>
+                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)} pb={this.loggedIn() ? this.state.account["profilePic"] : undefined}/>
             </div>
 
         )
@@ -62,6 +70,7 @@ export default class Account extends React.Component {
     }
 
     handleLoginSuccess(data){
+
         this.setState({account: data, expanded: false})
     }
 
@@ -313,7 +322,6 @@ class LogoutScreen extends React.Component {
         super(props)
     }
 
-
     render(){
 
         if(!this.props.render)
@@ -322,10 +330,38 @@ class LogoutScreen extends React.Component {
         return (
             <div className={styles.logoutScreen}>
                 <div className={styles.sign_title}>Account Optionen</div>
-                <div className={styles.accountSettings}>Einstellungen</div>
+                <div className={styles.pb}>
+                    <img className={styles.pic} src={this.props.pb}/>
+                    <div onClick={() => document.getElementById("pic_selector").click()} className={styles.pic_selector_fake}>Ändern</div>
+                    <input id="pic_selector" className={styles.pic_selector} type="file" accept="image/png, image/gif, image/jpeg" onChange={(event) => {
+                        this.performProfilePicChange(event.currentTarget.files[0])
+                    }}/>
+                </div>
                 <div className={styles.logout} onClick={() => this.performLogout()}>Abmelden</div>
             </div>
         )
+    }
+
+    /**
+     * 
+     * @param {File} pic 
+     */
+    async performProfilePicChange(pic){
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            postJson("http://localhost:3000/profilePicture", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "userId": getAuth().currentUser.uid,
+                    "pic": reader.result
+                })
+            })
+        }
+        reader.readAsDataURL(pic)
     }
 
     async performLogout(){

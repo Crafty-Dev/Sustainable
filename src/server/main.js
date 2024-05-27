@@ -6,10 +6,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getInfoTexts, loadContent } from "./infoTextManager.js";
 import bodyParser from "body-parser";
+import { ActionResult } from "../client/logic/requestUtils.js";
+import { saveProfilePic } from "./imageManager.js";
 
 export const INFORMATION_PATH = "data/information/";
 export const INFORMATION_TEXT_PATH = INFORMATION_PATH + "texts/";
 export const INFORMATION_CONTENT_PATH = INFORMATION_PATH + "content/";
+export const PROFILE_PICTURE_PATH = "data/profilePictures/";
 
 const app = express();
 
@@ -38,6 +41,15 @@ app.get("/information", async (req, res) => {
   data["generalInformation"].content = await loadContent(INFORMATION_PATH + data["generalInformation"].content)
 
   res.json(data)
+})
+
+app.post("/profilePicture", async (req, res) => {
+  
+  saveProfilePic(req.body)
+
+  res.json({
+    status: ActionResult.SUCCESS
+  })
 })
 
 

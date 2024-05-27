@@ -268,17 +268,52 @@
 }
 
 
-.accountSettings, .logout {
+.logout {
 
     margin: 5% 0px 5% 0px;
     width: 80%;
 
 }
 
-.accountSettings {
-    margin-top: 20%;
-}
 
 .logout {
     margin-bottom: 20%;
 }
+
+.pb {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+}
+
+.pic {
+    width: 50%;
+    height: auto;
+    aspect-ratio: 1;
+
+    margin-right: 10px;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+
+.pic img {
+    max-height: 100%;
+    max-width: 100%;
+
+
+
+}
+
+.pic_selector {
+    display: none;
+}
+
+

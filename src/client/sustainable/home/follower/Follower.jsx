@@ -40,7 +40,7 @@ class Followings extends React.Component {
 
         const list = [];
         for(var i = 0; i < 10; i++){
-            list.push(<FollowerEntry username={`Test Mensch - ${i}`} pb={"test.jpg"}/>)
+            list.push(<FollowerEntry username={`Test Mensch - ${i}`} pb={"defaultPP.png"}/>)
         }
 
         this.setState({followings: list})
@@ -78,7 +78,7 @@ class Followers extends React.Component {
 
         const list = [];
         for(var i = 0; i < 10; i++){
-            list.push(<FollowerEntry username={`Test Mensch - ${i}`} pb={"test.jpg"}/>)
+            list.push(<FollowerEntry username={`Test Mensch - ${i}`} pb={"defaultPP.png"}/>)
         }
 
         this.setState({followers: list})
