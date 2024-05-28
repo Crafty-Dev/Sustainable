@@ -45,7 +45,7 @@ app.get("/information", async (req, res) => {
 
 app.post("/profilePicture", async (req, res) => {
   
-  saveProfilePic(req.body)
+  console.log(req)
 
   res.json({
     status: ActionResult.SUCCESS

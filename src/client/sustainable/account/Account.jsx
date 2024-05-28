@@ -353,12 +353,10 @@ class LogoutScreen extends React.Component {
             postJson("http://localhost:3000/profilePicture", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": pic.type,
+                    "Content-Length": pic.size
                 },
-                body: JSON.stringify({
-                    "userId": getAuth().currentUser.uid,
-                    "pic": reader.result
-                })
+                body: pic
             })
         }
         reader.readAsDataURL(pic)

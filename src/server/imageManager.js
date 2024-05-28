@@ -5,7 +5,7 @@ export async function saveProfilePic(data){
 
     const uid = data.userId;
     const pic_encoded = data.pic.replace("data:image/jpeg;base64,", "");
-    console.log(pic_encoded)
+    console.log(data.type)
 
     fs.mkdirSync(PROFILE_PICTURE_PATH + uid, {
         recursive: true
