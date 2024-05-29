@@ -47,14 +47,37 @@ app.get("/information", async (req, res) => {
 app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "image/gif"], limit: "10mb"}), async (req, res) => {
   
 
-  const imageType = req.headers["content-type"];
   const fileEnding = req.headers["image-type"];
   const uid = req.headers["uid"];
 
+  const files = fs.readdirSync(PROFILE_PICTURE_PATH);
+  for(var i = 0; i < files.length; i++){
+    const file = files[i];
+    if(file.startsWith(uid + "."))
+      fs.unlinkSync(PROFILE_PICTURE_PATH + file);
+  }
   fs.writeFileSync(PROFILE_PICTURE_PATH + uid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
 
   res.json({
     status: ActionResult.SUCCESS
+  })
+})
+
+app.post("/getProfilePicture", async (req, res) => {
+
+  console.log("Bamening")
+
+  const files = fs.readdirSync(PROFILE_PICTURE_PATH);
+  let pic = "none";
+  for(var i = 0; i < files.length; i++){
+    if(files[i].startsWith(req.body.uid + "."))
+      pic = fs.readFileSync(PROFILE_PICTURE_PATH + files[i], "base64");
+  }
+
+  console.log(pic)
+  res.json({
+    status: ActionResult.SUCCESS,
+    pic: pic
   })
 })
 

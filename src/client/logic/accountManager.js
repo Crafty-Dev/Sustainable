@@ -1,5 +1,5 @@
 import { browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { ActionResult } from "./requestUtils.js";
+import { ActionResult, postJson } from "./requestUtils.js";
 import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "./init.js";
 
@@ -50,9 +50,12 @@ export async function retrieveAccountInfo(userId){
     if(!snapshot.exists())
         return {status: ActionResult.EMAIL_NOT_EXISTANT};
 
+    const data = snapshot.data();
+    data["profilePic"] = await loadProfilePicture(userId);
+
     return {
         status: ActionResult.SUCCESS,
-        data: snapshot.data()
+        data: data
     };
 }
 
@@ -65,4 +68,11 @@ export async function performLogout(){
 
     await signOut(auth);
     return {status: ActionResult.SUCCESS}
+}
+
+
+async function loadProfilePicture(){
+
+    return "defaultPP.png";
+    
 }

@@ -24,9 +24,6 @@ export default class Account extends React.Component {
 
                 console.log(data)
 
-                if(data["profilePic"] === undefined)
-                    data["profilePic"] = "defaultPP.png"
-
                 this.setState({account: data})
             }
         })
@@ -64,6 +61,7 @@ export default class Account extends React.Component {
 
         )
     }
+
 
     loggedIn(){
         return this.state.account !== undefined;
