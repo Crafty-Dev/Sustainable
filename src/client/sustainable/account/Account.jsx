@@ -334,7 +334,7 @@ class LogoutScreen extends React.Component {
                     <img className={styles.pic} src={this.props.pb}/>
                     <div onClick={() => document.getElementById("pic_selector").click()} className={styles.pic_selector_fake}>Ändern</div>
                     <input id="pic_selector" className={styles.pic_selector} type="file" accept="image/png, image/gif, image/jpeg" onChange={(event) => {
-                        this.performProfilePicChange(event.currentTarget.files[0])
+                        this.performProfilePicChange(event.target.files[0])
                     }}/>
                 </div>
                 <div className={styles.logout} onClick={() => this.performLogout()}>Abmelden</div>
@@ -348,18 +348,24 @@ class LogoutScreen extends React.Component {
      */
     async performProfilePicChange(pic){
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            postJson("http://localhost:3000/profilePicture", {
-                method: "POST",
-                headers: {
-                    "Content-Type": pic.type,
-                    "Content-Length": pic.size
-                },
-                body: pic
-            })
+        const formData = new FormData();
+        formData.append("pic", pic);
+        const fileReader = new FileReader();
+        fileReader.onloadend = (data) => {
+            console.log(data.target.result)
         }
-        reader.readAsDataURL(pic)
+        fileReader.readAsDataURL(pic)
+
+        postJson("http://localhost:3000/profilePicture", {
+            method: "POST",
+            headers: {
+                "Content-Type": pic.type,
+                "Image-Type": pic.name.split(".")[pic.name.split(".").length - 1],
+                "Content-Length": pic.size,
+                "uid": getAuth().currentUser.uid
+            },
+            body: pic
+        })
     }
 
     async performLogout(){

@@ -8,10 +8,11 @@
 
     width: 50vw;
     overflow-y: scroll;
+    overflow-wrap: break-word;
     height: 86vh;
 
     background-color: white;
-    padding: 0px 5% 0px 5%;
+    padding: 0px 2.5% 0px 2.5%;
 
     border: solid;
     border-radius: 10px;
@@ -29,6 +30,13 @@
 
 
 /*Text*/
+
+.text_border {
+
+    position: relative;
+    max-width: 100%;
+}
+
 .text_title {
     
     padding: 10px 0px 20px 0px;

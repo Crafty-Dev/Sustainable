@@ -8,6 +8,7 @@ import { getInfoTexts, loadContent } from "./infoTextManager.js";
 import bodyParser from "body-parser";
 import { ActionResult } from "../client/logic/requestUtils.js";
 import { saveProfilePic } from "./imageManager.js";
+import cors from "cors";
 
 export const INFORMATION_PATH = "data/information/";
 export const INFORMATION_TEXT_PATH = INFORMATION_PATH + "texts/";
@@ -43,9 +44,14 @@ app.get("/information", async (req, res) => {
   res.json(data)
 })
 
-app.post("/profilePicture", async (req, res) => {
+app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "image/gif"], limit: "10mb"}), async (req, res) => {
   
-  console.log(req)
+
+  const imageType = req.headers["content-type"];
+  const fileEnding = req.headers["image-type"];
+  const uid = req.headers["uid"];
+
+  fs.writeFileSync(PROFILE_PICTURE_PATH + uid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
 
   res.json({
     status: ActionResult.SUCCESS
@@ -65,6 +71,9 @@ function initDirectories(){
     recursive: true
   })
   fs.mkdirSync(INFORMATION_CONTENT_PATH, {
+    recursive: true
+  })
+  fs.mkdirSync(PROFILE_PICTURE_PATH, {
     recursive: true
   })
   console.log("Directories have been initialized")

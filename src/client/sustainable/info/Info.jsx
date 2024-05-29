@@ -135,7 +135,7 @@ class InfoText extends React.Component {
     render(){
         
         return (
-            <div className={styles.border}>
+            <div className={styles.text_border}>
                 <div className={styles.text_title}>{this.props.title}</div>
                 <div id="moin" className={styles.text_content}></div>
                 <div className={styles.text_refs}>{this.props.refs}</div>
