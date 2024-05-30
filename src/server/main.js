@@ -18,6 +18,7 @@ export const PROFILE_PICTURE_PATH = "data/profilePictures/";
 const app = express();
 
 app.use(bodyParser.json())
+app.use("/data", express.static("data"))
 
 const server = ViteExpress.listen(app, 3000, () =>
   console.log("Server is listening on port 3000..."),
@@ -59,25 +60,8 @@ app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "i
   fs.writeFileSync(PROFILE_PICTURE_PATH + uid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
 
   res.json({
-    status: ActionResult.SUCCESS
-  })
-})
-
-app.post("/getProfilePicture", async (req, res) => {
-
-  console.log("Bamening")
-
-  const files = fs.readdirSync(PROFILE_PICTURE_PATH);
-  let pic = "none";
-  for(var i = 0; i < files.length; i++){
-    if(files[i].startsWith(req.body.uid + "."))
-      pic = fs.readFileSync(PROFILE_PICTURE_PATH + files[i], "base64");
-  }
-
-  console.log(pic)
-  res.json({
     status: ActionResult.SUCCESS,
-    pic: pic
+    path: PROFILE_PICTURE_PATH + uid + "." + fileEnding
   })
 })
 

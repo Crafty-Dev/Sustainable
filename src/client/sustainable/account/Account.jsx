@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Account.module.css"
 import { ActionResult, getStatusText, postJson } from "../../logic/requestUtils.js";
-import { performLogout, performSignIn, performSignUp, retrieveAccountInfo } from "../../logic/accountManager.js";
+import { performLogout, performProfilePicChange, performSignIn, performSignUp, retrieveAccountInfo } from "../../logic/accountManager.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default class Account extends React.Component {
@@ -19,14 +19,20 @@ export default class Account extends React.Component {
     componentDidMount(){
 
         this.stopAuthListener = onAuthStateChanged(getAuth(), async (user) => {
-            if(user){
-                const data = (await retrieveAccountInfo(user.uid)).data;
-
-                console.log(data)
-
-                this.setState({account: data})
-            }
+            if(user)
+                this.loadAccountData(user.uid)
         })
+    }
+
+    async loadAccountData(userId){
+        const data = (await retrieveAccountInfo(userId)).data;
+
+        if(data["profilePicture"] === undefined || data["profilePic"] === null)
+            data["profilePicture"] = "defaultPP.png";
+
+        console.log(data)
+
+        this.setState({account: data})
     }
 
     componentWillUnmount(){
@@ -56,7 +62,7 @@ export default class Account extends React.Component {
                 {this.state.account !== undefined ? <UserLoggedIn username={this.state.account.username}/> : <UserLoggedOut/>}
                 </div>
                 <LoginScreen render={this.state.expanded && !this.loggedIn()} handleSuccess={this.handleLoginSuccess.bind(this)}/>
-                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)} pb={this.loggedIn() ? this.state.account["profilePic"] : undefined}/>
+                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)} pb={this.loggedIn() ? this.state.account["profilePicture"] : undefined} reloadUser={this.loadAccountData.bind(this)}/>
             </div>
 
         )
@@ -124,7 +130,7 @@ class LoginScreen extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {signUp: false}
+        this.state = {signUp: true}
     }
 
 
@@ -229,7 +235,7 @@ class SignUp extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {email: undefined, username: undefined, password: undefined, rep_password: undefined, statusMsg: undefined, processing: false}
+        this.state = {staySignedIn: false, email: undefined, username: undefined, password: undefined, rep_password: undefined, statusMsg: undefined, processing: false}
     }
 
     render(){
@@ -256,6 +262,10 @@ class SignUp extends React.Component {
                 <input className={styles.sign_input} type="password" onChange={(e) => {
                     this.setState({rep_password: e.currentTarget.value})
                 }}/>
+                <div className={styles.staySignedIn} onClick={() => this.setState({staySignedIn: !this.state.staySignedIn})}>
+                    <div className={this.state.staySignedIn ? styles.sign_checkbox_checked : styles.sign_checkbox}>{this.state.staySignedIn ? "✓" : ""}</div>
+                    <div className={styles.sign_label}>Angemeldet bleiben</div>
+                </div>
                 {this.state.statusMsg}
                 <div className={this.state.processing ? styles.sign_confirm_processing : styles.sign_confirm} onClick={() => this.signUp()}>Registrieren</div>
             </div>
@@ -346,24 +356,11 @@ class LogoutScreen extends React.Component {
      */
     async performProfilePicChange(pic){
 
-        const formData = new FormData();
-        formData.append("pic", pic);
-        const fileReader = new FileReader();
-        fileReader.onloadend = (data) => {
-            console.log(data.target.result)
-        }
-        fileReader.readAsDataURL(pic)
+        const uid = getAuth().currentUser.uid;
 
-        postJson("http://localhost:3000/profilePicture", {
-            method: "POST",
-            headers: {
-                "Content-Type": pic.type,
-                "Image-Type": pic.name.split(".")[pic.name.split(".").length - 1],
-                "Content-Length": pic.size,
-                "uid": getAuth().currentUser.uid
-            },
-            body: pic
-        })
+        await performProfilePicChange(uid, pic);
+        this.props.reloadUser(uid);
+
     }
 
     async performLogout(){

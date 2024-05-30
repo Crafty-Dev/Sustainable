@@ -267,18 +267,48 @@
     color: rgb(207, 104, 104);
 }
 
+.sign_checkbox, .sign_checkbox_checked {
+    
+    position: relative;
+
+    width: 15px;
+    height: 15px;
+
+    margin-right: 5px;
+
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+
+    border-color: rgb(64, 64, 64);
+    background-color: rgb(32, 32, 32);
+}
+
+.sign_checkbox_checked {
+
+    font-weight: bold;
+    color: rgb(92, 105, 116);
+}
+
+.staySignedIn {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 15%;
+
+}
+
+
 
 .logout {
 
-    margin: 5% 0px 5% 0px;
+    margin: 5% 0px 0px 0px;
     width: 80%;
 
 }
 
-
-.logout {
-    margin-bottom: 20%;
-}
 
 .pb {
     position: relative;
@@ -289,6 +319,9 @@
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
+
+    margin-top: 10%;
+    margin-bottom: 10%;
 }
 
 .pic {
