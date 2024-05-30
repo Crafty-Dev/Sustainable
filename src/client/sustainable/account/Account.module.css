@@ -286,6 +286,10 @@
 
 .sign_checkbox_checked {
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     font-weight: bold;
     color: rgb(92, 105, 116);
 }
@@ -295,6 +299,7 @@
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
     margin-bottom: 15%;
 

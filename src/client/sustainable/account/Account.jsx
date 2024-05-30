@@ -10,7 +10,7 @@ export default class Account extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {expanded: true, account: undefined}
+        this.state = {expanded: false, account: undefined}
 
 
     }
@@ -130,7 +130,7 @@ class LoginScreen extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {signUp: true}
+        this.state = {signUp: false}
     }
 
 
@@ -158,7 +158,7 @@ class SignIn extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {email: undefined, password: undefined, statusMsg: undefined, processing: false}
+        this.state = {staySignedIn: false, email: undefined, password: undefined, statusMsg: undefined, processing: false}
     }
 
     render(){
@@ -177,6 +177,10 @@ class SignIn extends React.Component {
                 <input className={styles.sign_input} type="password" onChange={(e) => {
                     this.setState({password: e.currentTarget.value})
                 }}/>
+                <div className={styles.staySignedIn} onClick={() => this.setState({staySignedIn: !this.state.staySignedIn})}>
+                    <div className={this.state.staySignedIn ? styles.sign_checkbox_checked : styles.sign_checkbox}>{this.state.staySignedIn ? "✓" : ""}</div>
+                    <div className={styles.sign_label}>Angemeldet bleiben</div>
+                </div>
                 {this.state.statusMsg}
                 <div className={this.state.processing ? styles.sign_confirm_processing : styles.sign_confirm} onClick={() => this.login()}>Anmelden</div>
             </div>
@@ -220,7 +224,7 @@ class SignIn extends React.Component {
             return {status: ActionResult.INVALID_PASSWORD};
 
 
-        const res = await performSignIn(this.state.email, this.state.password);
+        const res = await performSignIn(this.state.email, this.state.password, this.state.staySignedIn);
 
         if(res === null)
             return {status: ActionResult.FAILED};
@@ -315,7 +319,7 @@ class SignUp extends React.Component {
             return {status: ActionResult.INVALID_PASSWORD};
 
 
-        const res = await performSignUp(this.state.email, this.state.password, this.state.username);
+        const res = await performSignUp(this.state.email, this.state.password, this.state.username, this.state.staySignedIn);
 
         if(res === null)
             return {status: ActionResult.FAILED};

@@ -8,7 +8,6 @@ import { getInfoTexts, loadContent } from "./infoTextManager.js";
 import bodyParser from "body-parser";
 import { ActionResult } from "../client/logic/requestUtils.js";
 import { saveProfilePic } from "./imageManager.js";
-import cors from "cors";
 
 export const INFORMATION_PATH = "data/information/";
 export const INFORMATION_TEXT_PATH = INFORMATION_PATH + "texts/";
