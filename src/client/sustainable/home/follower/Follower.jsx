@@ -117,3 +117,26 @@ class FollowerEntry extends React.Component {
 
 
 }
+
+
+class FollowerManager extends React.Component {
+
+
+    constructor(props){
+        super(props)
+    }
+
+    render(){
+
+        if(!this.props.render)
+            return null;
+
+        return (
+            <div className={styles.follower_manager}>
+                
+            </div>
+        )
+
+    }
+
+}

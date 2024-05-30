@@ -79,3 +79,23 @@
     max-width: 100%;
 
 }
+
+
+/* Follower Manager */
+.follower_manager {
+
+    position: absolute;
+
+    top: 10vh;
+    left: 17.5vw;
+
+    height: 90vh;
+    width: 65vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+}
