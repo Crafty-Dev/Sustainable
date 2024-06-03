@@ -196,6 +196,10 @@ export class FollowerManager extends React.Component {
             })
         }
 
+
+        if(prevProps.account !== this.props.account && this.props.account !== undefined)
+            this.performSearch();
+
     }
 
     componentDidMount(){
@@ -241,7 +245,6 @@ export class FollowerManager extends React.Component {
             searchUsers(this.state.currentQuery).then((users) => {
             for(var i = 0; i < users.length; i++){
                 const user = users[i];
-                console.log(user)
                 entries.push(<ResultEntry key={user.uid} pp={user.profilePicture} uid={user.uid} username={user.username} points={user.points} date={new Date(Date.parse(user.created)).toDateString()} isSelf={selfId === user.uid} followes={this.followesUser.bind(this)}/>)
             }
 
@@ -266,9 +269,6 @@ class ResultEntry extends React.Component {
         this.state = {hovered: false}
     }
 
-    componentDidUpdate(){
-        console.log("Bamening: " + this.props.followes(this.props.uid))
-    }
 
     render(){
 

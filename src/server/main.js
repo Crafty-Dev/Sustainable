@@ -13,6 +13,7 @@ export const INFORMATION_PATH = "data/information/";
 export const INFORMATION_TEXT_PATH = INFORMATION_PATH + "texts/";
 export const INFORMATION_CONTENT_PATH = INFORMATION_PATH + "content/";
 export const PROFILE_PICTURE_PATH = "data/profilePictures/";
+export const POST_IMAGE_PATH = "data/postImages/";
 
 const app = express();
 
@@ -67,6 +68,27 @@ app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "i
   })
 })
 
+app.post("/postImage", bodyParser.raw({type: ["image/jpeg", "image/png", "image/gif"], limit: "10mb"}), (req, res) => {
+
+  const fileEnding = req.headers["image-type"];
+  const postId = req.headers["postid"];
+
+  const files = fs.readdirSync(POST_IMAGE_PATH);
+  for(var i = 0; i < files.length; i++){
+    const file = files[i];
+    if(file.startsWith(postId + "_"))
+      fs.unlinkSync(POST_IMAGE_PATH + file);
+  }
+
+  const uuid = randomUUID().toString();
+  fs.writeFileSync(POST_IMAGE_PATH + postId + "_" + uuid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
+
+  res.json({
+    status: ActionResult.SUCCESS,
+    path: POST_IMAGE_PATH + postId + "_" + uuid + "." + fileEnding
+  })
+})
+
 
 initDirectories();
 
@@ -83,6 +105,9 @@ function initDirectories(){
     recursive: true
   })
   fs.mkdirSync(PROFILE_PICTURE_PATH, {
+    recursive: true
+  })
+  fs.mkdirSync(POST_IMAGE_PATH, {
     recursive: true
   })
   console.log("Directories have been initialized")

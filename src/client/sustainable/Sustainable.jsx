@@ -25,7 +25,6 @@ export default class Sustainable extends React.Component {
             if(user){
                 this.loadAccountData(user.uid)
                 this.stopAccountChangeListener = onSnapshot(doc(collection(db, "accounts"), user.uid), (doc) => {
-                    console.log(doc.data())
                     this.changeAccountData(doc.data());
                 })
             } else {

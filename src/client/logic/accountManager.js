@@ -138,3 +138,35 @@ export async function follow(uid){
     await setDoc(userDocRef, userDocData);
     await setDoc(followDocRef, followDocData);
 }
+
+
+export async function createPost(category, subtitle, image, points){
+
+    const userId = getAuth().currentUser.uid;
+
+    const q = query(doc(collection(db, "posts"), userId));
+    const docRef = await getDoc(q);
+
+    let posts = [];
+
+    if(docRef.exists())
+        posts = docRef.data().posts;
+
+    posts.push({
+        "hasImage": image !== undefined,
+        "category": category,
+        "subtitle": subtitle,
+        "image": image !== undefined ? image : "none"
+    })
+    
+    await setDoc(doc(collection(db, "posts"), userId), {
+        "posts": posts
+    });
+    
+    const userDoc = await getDoc(doc(collection(db, "accounts"), userId));
+    const currentPoints = userDoc.data().points;
+
+    await setDoc(doc(collection(db, "accounts"), userId), {
+        "points": currentPoints + points
+    }, {merge: true})
+}
