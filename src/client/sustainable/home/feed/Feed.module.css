@@ -120,7 +120,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: 97.5%;
+    width: auto;
     max-height: 50vh;
 }
 
@@ -161,6 +161,33 @@
     padding-right: 5px;
 }
 
+.text, .points {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+
+    font-family: 'Courier New', Courier, monospace;
+    
+
+    color: rgb(92, 105, 116);
+    font-size: 20px;
+    text-align: center;
+}
+
+.points {
+    position: absolute;
+    top: 15%;
+
+    color: rgb(99, 221, 99);
+}
+
+.subtitle_points {
+    padding-right: 5px;
+}
 
 /* Post Manager */
 .bg {

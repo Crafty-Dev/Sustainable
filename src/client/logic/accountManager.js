@@ -140,7 +140,7 @@ export async function follow(uid){
 }
 
 
-export async function createPost(category, subtitle, image, points){
+export async function createPost(category, subtitle, image, points, username, date, userProfilePic){
 
     const userId = getAuth().currentUser.uid;
 
@@ -153,10 +153,13 @@ export async function createPost(category, subtitle, image, points){
         posts = docRef.data().posts;
 
     posts.push({
+        "username": username,
+        "date": date,
         "hasImage": image !== undefined,
         "category": category,
         "subtitle": subtitle,
-        "image": image !== undefined ? image : "none"
+        "image": image !== undefined ? image : "none",
+        "points": points
     })
     
     await setDoc(doc(collection(db, "posts"), userId), {
@@ -169,4 +172,89 @@ export async function createPost(category, subtitle, image, points){
     await setDoc(doc(collection(db, "accounts"), userId), {
         "points": currentPoints + points
     }, {merge: true})
+
+    const totalPoints = currentPoints + points;
+
+    const ranks = await loadTopRanks();
+    if(ranks.length === 0){
+        await setDoc(doc(collection(db, "ranking"), "ranking"), {
+            "ranks": [{
+                "profilePicture": userProfilePic !== undefined ? userProfilePic : "none",
+                "username": username,
+                "points": totalPoints,
+                "uid": userId
+            }]
+        })
+        return;
+    }
+
+    for(var j = 0; j < ranks.length; j++){
+        if(ranks[j].uid === userId){
+            ranks.splice(j, 1);
+            break;
+        }
+    }
+
+    let i = ranks.length - 1;
+    for(i; i >= 0; i--){
+        const rankData = ranks[i];
+
+        if(rankData.points > totalPoints)
+            break;
+    }
+
+    ranks.splice(i + 1, 0, {
+        "profilePicture": userProfilePic !== undefined ? userProfilePic : "none",
+        "username": username,
+        "points": totalPoints,
+        "uid": userId
+    })
+
+    await setDoc(doc(collection(db, "ranking"), "ranking"), {
+        "ranks": ranks
+    })
+}
+
+
+export async function loadPostCache(){
+
+    const postCache = [];
+
+    const userId = getAuth().currentUser.uid;
+    const userData = (await getDoc(doc(collection(db, "accounts"), userId))).data();
+    
+    const followers = userData.followers;
+    followers.unshift(userId);
+
+    for(var i = 0; i < Math.min(followers.length, 20); i++){
+        const follower = followers[i];
+
+        const followerPostDoc = (await getDoc(doc(collection(db, "posts"), follower)));
+        if(!followerPostDoc.exists())
+            continue;
+
+        const followerPostData = followerPostDoc.data();
+        if(followerPostData.posts.length === 0)
+            continue;
+
+        const data = followerPostData.posts[followerPostData.posts.length - 1];
+        data["uid"] = follower;
+
+        postCache.push(data);
+    }
+
+    return postCache;
+}
+
+
+export async function loadTopRanks(){
+
+    const entries = [];
+
+    const rankDoc = await getDoc(doc(collection(db, "ranking"), "ranking"));
+    if(!rankDoc.exists())
+        return entries;
+
+    return rankDoc.data().ranks;
+
 }

@@ -1,0 +1,102 @@
+.ranking {
+
+    position: absolute;
+    width: 50%;
+    height: 80%;
+
+    left: 50%;
+    top: 15vh;
+    transform: translateX(-50%);
+    
+    border: solid;
+    border-radius: 10px;
+    border-width: 3px;
+
+
+    border-color: rgb(92, 105, 116);
+    background-color: rgb(32, 32, 32);
+
+    overflow: scroll;
+
+}
+.ranking::-webkit-scrollbar {
+    display: none;
+}
+
+.title {
+
+    user-select: none;
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 50px;
+
+    color: rgb(92, 105, 116);
+
+    text-align: center;
+
+}
+
+.rank_list {
+}
+
+
+.rank_entry {
+    cursor: default;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    max-height: 10%;
+}
+
+.rank_entry:hover {
+    background-color: rgb(48, 48, 48);
+}
+
+.profilePic {
+    position: relative;
+
+    margin-right: 1.25%;
+
+    max-width: 7.5%;
+}
+
+.username {
+
+    margin-left: 1.25%;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+
+    color: rgb(184, 184, 184);
+
+}
+
+.points {
+    position: absolute;
+    right: 10px;
+
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+
+    color: rgb(92, 105, 116);
+}
+
+.uid {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+
+    color: rgb(64, 64, 64);
+}
+
+.rank_number {
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+
+    margin-right: 5px;
+
+    color: rgb(92, 105, 116);
+}

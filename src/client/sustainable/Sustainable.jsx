@@ -5,7 +5,7 @@ import Info from "./info/Info.jsx";
 import Home from "./home/Home.jsx";
 import Account from "./account/Account.jsx";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { retrieveAccountInfo } from "../logic/accountManager.js";
+import { loadPostCache, retrieveAccountInfo } from "../logic/accountManager.js";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../logic/init.js";
 
@@ -15,7 +15,7 @@ export default class Sustainable extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {page: Pages.HOME, account: undefined}
+        this.state = {page: Pages.HOME, account: undefined, postCache: []}
     }
 
 
@@ -26,10 +26,14 @@ export default class Sustainable extends React.Component {
                 this.loadAccountData(user.uid)
                 this.stopAccountChangeListener = onSnapshot(doc(collection(db, "accounts"), user.uid), (doc) => {
                     this.changeAccountData(doc.data());
+                    loadPostCache().then(posts => {
+                        this.setState({postCache: posts})
+                    })
                 })
             } else {
                 if(this.stopAccountChangeListener !== undefined)
                     this.stopAccountChangeListener();
+
                 this.setState({account: undefined})
             }
         })
@@ -68,7 +72,7 @@ export default class Sustainable extends React.Component {
                 </div>
                 <div className={styles.content}>
                     <Ranking render={this.state.page === Pages.RANKING}/>
-                    <Home account={this.state.account} render={this.state.page === Pages.HOME}/>
+                    <Home postCache={this.state.postCache} account={this.state.account} render={this.state.page === Pages.HOME}/>
                     <Info render={this.state.page === Pages.INFORMATION}/>
                     <Account account={this.state.account}/>
                 </div>

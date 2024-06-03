@@ -12,13 +12,14 @@ export default class Home extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {subPage: SubPage.POST_MANAGER}
+        this.state = {subPage: SubPage.FEED}
     }
 
 
     componentDidUpdate(prevProps){
         if(prevProps.account !== this.props.account && this.props.account === undefined)
             this.setState({subPage: SubPage.FEED})
+
     }
 
     render(){
@@ -30,7 +31,7 @@ export default class Home extends React.Component {
             <div className={styles.home}>
                 <Follower account={this.props.account} toggleManager={this.toggleFollowerManager.bind(this)}/>
                 <FollowerManager account={this.props.account} render={this.state.subPage === SubPage.FOLLOWER_MANAGER}/>
-                <Feed account={this.props.account} render={this.state.subPage === SubPage.FEED}/>
+                <Feed postCache={this.props.postCache} account={this.props.account} render={this.state.subPage === SubPage.FEED}/>
                 <PostManager account={this.props.account} render={this.state.subPage === SubPage.POST_MANAGER} toggleManager={this.togglePostManager.bind(this)}/>
                 <Stats account={this.props.account} toggleManager={this.togglePostManager.bind(this)}/>
             </div>

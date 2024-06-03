@@ -15,6 +15,12 @@ export default class Follower extends React.Component {
     }
 
 
+    componentDidUpdate(){
+
+        console.log("ikdnwaikd")
+
+    }
+
 
     render(){
 
@@ -54,9 +60,17 @@ class Followings extends React.Component {
         return null;
     }
 
-    componentDidUpdate(){
-
+    componentDidMount(){
+        if(this.props.account !== undefined){
+            this.loadFollowings();
+        }
     }
+
+    componentDidUpdate(){
+        
+    }
+
+
 
 
     async loadFollowings(){
@@ -118,6 +132,11 @@ class Followers extends React.Component {
 
     }
 
+    componentDidMount(){
+        if(this.props.account !== undefined){
+            this.loadFollowers();
+        }
+    }
 
     async loadFollowers(){
 

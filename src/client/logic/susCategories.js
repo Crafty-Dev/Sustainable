@@ -12,7 +12,7 @@ export const SusCategory =
         points: 6
     },
 
-    RIDDING_BIKE:
+    RIDING_BIKE:
     {
         desc: "Fahrrad fahren",
         points: 4

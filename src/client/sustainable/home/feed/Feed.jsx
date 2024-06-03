@@ -12,6 +12,48 @@ export default class Feed extends React.Component {
     constructor(props){
         super(props)
 
+        this.state = {postCache: [], currentPost: undefined}
+
+    }
+
+    componentDidUpdate(prevProps){
+
+        if(prevProps.postCache !== this.props.postCache){
+            this.reloadPostCache();
+        }
+
+    }
+
+    componentDidMount(){
+        if(this.props.account !== undefined)
+            this.reloadPostCache();
+    }
+
+    reloadPostCache(){
+
+        const entries = [];
+
+        for(var i = 0; i < this.props.postCache.length; i++){
+            const postData = this.props.postCache[i];
+            
+            console.log(postData)
+            entries.push(<Post prevPost={this.prevPost.bind(this)} nextPost={this.nextPost.bind(this)} id={i} uid={postData.uid} hasImage={postData.hasImage} pic={postData.image} username={postData.username} subtitle={postData.subtitle} date={postData.date} points={postData.points} category={postData.category}/>)
+        }
+
+        this.setState({postCache: entries, currentPost: entries.length > 0 ? 0 : undefined});
+
+    }
+
+    prevPost(){
+        if(!(this.state.currentPost <= 0))
+            this.setState({currentPost: this.state.currentPost - 1})
+    }
+
+    nextPost(){
+
+        if(!(this.state.currentPost >= this.state.postCache.length - 1))
+            this.setState({currentPost: this.state.currentPost + 1})
+        
     }
 
     render(){
@@ -21,7 +63,7 @@ export default class Feed extends React.Component {
 
         return (
             <div className={styles.feed}>
-                    <Post username="Bernd" subtitle="Ein Vorbild für vegane Ernährung!" pic="test.jpg" date={new Date().toLocaleDateString()}/>
+                    {this.state.currentPost === undefined ? "" : this.state.postCache[this.state.currentPost]}
             </div>
         )
 
@@ -44,21 +86,23 @@ class Post extends React.Component {
 
         return (
             <div className={styles.post}>
-                <div className={styles.prev}><img src="arrow.png"/></div>
+                <div className={styles.prev} onClick={() => this.props.prevPost()}><img src="arrow.png"/></div>
                 <div className={styles.content_bg}>
                     <div className={styles.content}>
-                        <div className={styles.user}>Gepostet von: <strong>{this.props.username}</strong></div>
+                        <div className={styles.user}>Gepostet von: <strong>{this.props.uid === getAuth().currentUser.uid ? <i>Dir</i> : this.props.username}</strong></div>
                         <div className={styles.date}>{this.props.date}</div>
                         <div className={styles.content_pic_bg}>
-                        <img className={styles.content_pic} src={this.props.pic}/>
+                        {this.props.hasImage ? <img className={styles.content_pic} src={this.props.pic}/> : <div className={styles.text}>{SusCategory[this.props.category].desc}</div>}
+                        <div className={this.props.hasImage || this.props.points === "" ? styles.invis : styles.points_preview}>Punkte: {this.props.points}</div>
                         </div>
                         <div className={styles.subtitle}>
+                            <div className={styles.subtitle_points}>{`(${this.props.points})`}</div>
                             <div className={styles.subtitle_user}><strong>{this.props.username}</strong>:</div>
                             <div className={styles.subtitle_text}>{this.props.subtitle}</div>
                         </div>
                         </div>
                     </div>
-                <div className={styles.next}><img src="arrow.png"/></div>
+                <div className={styles.next} onClick={() => this.props.nextPost()}><img src="arrow.png"/></div>
             </div>
         )
 
@@ -179,8 +223,7 @@ export class PostManager extends React.Component {
             return;
         }
 
-        console.log("Bamening")
-        createPost(this.state.category, this.state.subtitle, this.state.image, SusCategory[this.state.category].points).then(() => {
+        createPost(this.state.category, this.state.subtitle, this.state.image, SusCategory[this.state.category].points, this.props.account.username, new Date().toDateString(), this.props.account.profilePicture).then(() => {
             this.setState({processing: false});
             this.props.toggleManager();
         });
