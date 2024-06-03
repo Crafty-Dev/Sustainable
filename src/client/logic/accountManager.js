@@ -1,7 +1,8 @@
 import { browserLocalPersistence, browserSessionPersistence, createUserWithEmailAndPassword, getAuth, setPersistence, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { ActionResult, postJson } from "./requestUtils.js";
-import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, documentId, getDoc, getDocs, or, orderBy, query, setDoc, where } from "firebase/firestore";
 import { db } from "./init.js";
+import { orderByValue } from "firebase/database";
 
 export async function performSignUp(email, password, username, staySignedIn){
 
@@ -14,7 +15,11 @@ export async function performSignUp(email, password, username, staySignedIn){
     const credentials = await createUserWithEmailAndPassword(auth, email, password);
     await setDoc(doc(collection(db, "accounts"), credentials.user.uid), {
         "email": email,
-        "username": username
+        "username": username,
+        "followers": [],
+        "followings": [],
+        "created": new Date().toUTCString(),
+        "points": 0
     })
 
     return await retrieveAccountInfo(credentials.user.uid);
@@ -46,13 +51,13 @@ export async function performProfilePicChange(userId, pic){
             "Content-Type": pic.type,
             "Image-Type": pic.name.split(".")[pic.name.split(".").length - 1],
             "Content-Length": pic.size,
-            "uid": userId
+            "uid": userId,
+
         },
         body: pic
     })
 
     const path = res.path;
-    console.log(path)
     const docRef = doc(collection(db, "accounts"), userId);
     await setDoc(docRef, {profilePicture: path}, {merge: true})
 
@@ -85,4 +90,51 @@ export async function performLogout(){
 
     await signOut(auth);
     return {status: ActionResult.SUCCESS}
+}
+
+
+export async function searchUsers(q){
+
+    const userQuery = query(collection(db, "accounts"), where(documentId(), "==", q));
+    let docs = await getDocs(userQuery);
+
+    if(docs.empty)
+        docs = await getDocs(query(collection(db, "accounts"), where("username", "==", q)))
+
+    if(docs.empty)
+        return [];
+
+
+    const users = [];
+ 
+    docs.forEach((docRef) => {
+        const data = docRef.data();
+        data["uid"] = docRef.id;
+        if(data["profilePicture"] === undefined || data["profilePicture"] === null)
+            data["profilePicture"] = "defaultPP.png";
+        users.push(data);
+    })
+
+    return users;
+}
+
+
+export async function follow(uid){
+
+    const userId = getAuth().currentUser.uid;
+
+    const userDocRef = doc(collection(db, "accounts"), userId);
+    const followDocRef = doc(collection(db, "accounts"), uid);
+
+    const userDocData = (await getDoc(userDocRef)).data();
+    const followDocData = (await getDoc(followDocRef)).data();
+
+    if(!userDocData.followings.includes(uid))
+        userDocData.followings.push(uid);
+    
+    if(!followDocData.followers.includes(userId))
+        followDocData.followers.push(userId);
+
+    await setDoc(userDocRef, userDocData);
+    await setDoc(followDocRef, followDocData);
 }

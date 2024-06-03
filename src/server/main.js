@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 import { getInfoTexts, loadContent } from "./infoTextManager.js";
 import bodyParser from "body-parser";
 import { ActionResult } from "../client/logic/requestUtils.js";
-import { saveProfilePic } from "./imageManager.js";
+import { randomUUID } from "crypto";
 
 export const INFORMATION_PATH = "data/information/";
 export const INFORMATION_TEXT_PATH = INFORMATION_PATH + "texts/";
@@ -44,7 +44,7 @@ app.get("/information", async (req, res) => {
   res.json(data)
 })
 
-app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "image/gif"], limit: "10mb"}), async (req, res) => {
+app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "image/gif"], limit: "10mb"}), (req, res) => {
   
 
   const fileEnding = req.headers["image-type"];
@@ -53,14 +53,17 @@ app.post("/profilePicture", bodyParser.raw({type: ["image/jpeg", "image/png", "i
   const files = fs.readdirSync(PROFILE_PICTURE_PATH);
   for(var i = 0; i < files.length; i++){
     const file = files[i];
-    if(file.startsWith(uid + "."))
+    if(file.startsWith(uid + "_"))
       fs.unlinkSync(PROFILE_PICTURE_PATH + file);
   }
-  fs.writeFileSync(PROFILE_PICTURE_PATH + uid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
+
+  const uuid = randomUUID().toString();
+
+  fs.writeFileSync(PROFILE_PICTURE_PATH + uid + "_" + uuid + "." + fileEnding, Buffer.from(req.body, "base64"), {encoding: "base64"});
 
   res.json({
     status: ActionResult.SUCCESS,
-    path: PROFILE_PICTURE_PATH + uid + "." + fileEnding
+    path: PROFILE_PICTURE_PATH + uid + "_" + uuid + "." + fileEnding
   })
 })
 

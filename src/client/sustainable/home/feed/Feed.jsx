@@ -10,9 +10,10 @@ export default class Feed extends React.Component {
 
     }
 
-
-
     render(){
+
+        if(!this.props.render)
+            return null;
 
         return (
             <div className={styles.feed}>
@@ -56,6 +57,27 @@ class Post extends React.Component {
                         </div>
                     </div>
                 <div className={styles.next}><img src="arrow.png"/></div>
+            </div>
+        )
+
+    }
+
+}
+
+
+export class PostManager extends React.Component {
+
+
+    constructor(props){
+        super(props)
+    }
+
+
+    render(){
+
+        return (
+            <div>
+
             </div>
         )
 

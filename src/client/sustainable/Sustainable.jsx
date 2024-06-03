@@ -4,6 +4,10 @@ import Ranking from "./ranking/Ranking.jsx";
 import Info from "./info/Info.jsx";
 import Home from "./home/Home.jsx";
 import Account from "./account/Account.jsx";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { retrieveAccountInfo } from "../logic/accountManager.js";
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../logic/init.js";
 
 export default class Sustainable extends React.Component {
 
@@ -11,9 +15,47 @@ export default class Sustainable extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {page: Pages.HOME}
+        this.state = {page: Pages.HOME, account: undefined}
     }
 
+
+    componentDidMount(){
+
+        this.stopAuthListener = onAuthStateChanged(getAuth(), async (user) => {
+            if(user){
+                this.loadAccountData(user.uid)
+                this.stopAccountChangeListener = onSnapshot(doc(collection(db, "accounts"), user.uid), (doc) => {
+                    console.log(doc.data())
+                    this.changeAccountData(doc.data());
+                })
+            } else {
+                if(this.stopAccountChangeListener !== undefined)
+                    this.stopAccountChangeListener();
+                this.setState({account: undefined})
+            }
+        })
+
+    }
+
+    async loadAccountData(userId){
+        const data = (await retrieveAccountInfo(userId)).data;
+        this.changeAccountData(data);
+    }
+
+    changeAccountData(data){
+
+        if(data["profilePicture"] === undefined || data["profilePicture"] === null)
+            data["profilePicture"] = "defaultPP.png";
+        
+        this.setState({account: data})
+    }
+
+    componentWillUnmount(){
+        this.stopAuthListener();
+
+        if(this.stopChangeListener !== undefined)
+            this.stopAccountChangeListener();
+    }
 
 
     render(){
@@ -27,9 +69,9 @@ export default class Sustainable extends React.Component {
                 </div>
                 <div className={styles.content}>
                     <Ranking render={this.state.page === Pages.RANKING}/>
-                    <Home render={this.state.page === Pages.HOME}/>
+                    <Home account={this.state.account} render={this.state.page === Pages.HOME}/>
                     <Info render={this.state.page === Pages.INFORMATION}/>
-                    <Account/>
+                    <Account account={this.state.account}/>
                 </div>
             </div>
         )

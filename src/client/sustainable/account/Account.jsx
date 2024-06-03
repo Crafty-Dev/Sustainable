@@ -10,35 +10,16 @@ export default class Account extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {expanded: false, account: undefined}
-
+        this.state = {expanded: false}
 
     }
 
 
-    componentDidMount(){
+    componentDidUpdate(prevProps){
 
-        this.stopAuthListener = onAuthStateChanged(getAuth(), async (user) => {
-            if(user)
-                this.loadAccountData(user.uid)
-        })
+        if((prevProps.account !== undefined && this.props.account === undefined) || (prevProps.account === undefined && this.props.account !== undefined))
+            this.setState({expanded: false})
     }
-
-    async loadAccountData(userId){
-        const data = (await retrieveAccountInfo(userId)).data;
-
-        if(data["profilePicture"] === undefined || data["profilePic"] === null)
-            data["profilePicture"] = "defaultPP.png";
-
-        console.log(data)
-
-        this.setState({account: data})
-    }
-
-    componentWillUnmount(){
-        this.stopAuthListener();
-    }
-
 
     render(){
 
@@ -59,27 +40,17 @@ export default class Account extends React.Component {
                             }
                         ], 500)
                 }}>
-                {this.state.account !== undefined ? <UserLoggedIn username={this.state.account.username}/> : <UserLoggedOut/>}
+                {this.props.account !== undefined ? <UserLoggedIn username={this.props.account.username}/> : <UserLoggedOut/>}
                 </div>
-                <LoginScreen render={this.state.expanded && !this.loggedIn()} handleSuccess={this.handleLoginSuccess.bind(this)}/>
-                <LogoutScreen render={this.state.expanded && this.loggedIn()} handleSuccess={this.handleLogoutSuccess.bind(this)} pb={this.loggedIn() ? this.state.account["profilePicture"] : undefined} reloadUser={this.loadAccountData.bind(this)}/>
+                <LoginScreen render={this.state.expanded && !this.loggedIn()}/>
+                <LogoutScreen render={this.state.expanded && this.loggedIn()} account={this.props.account}/>
             </div>
 
         )
     }
 
-
     loggedIn(){
-        return this.state.account !== undefined;
-    }
-
-    handleLoginSuccess(data){
-
-        this.setState({account: data, expanded: false})
-    }
-
-    handleLogoutSuccess(){
-        this.setState({account: undefined, expanded: false})
+        return this.props.account !== undefined;
     }
 
 }
@@ -145,8 +116,8 @@ class LoginScreen extends React.Component {
                     <div className={this.state.signUp ? styles.switch_inactive : styles.switch_active} onClick={() => this.setState({signUp: false})}>Sign in</div>
                     <div className={this.state.signUp ? styles.switch_active : styles.switch_inactive} onClick={() => this.setState({signUp: true})}>Sign up</div>
                 </div>
-                <SignIn render={!this.state.signUp} handleSuccess={this.props.handleSuccess}/>
-                <SignUp render={this.state.signUp} handleSuccess={this.props.handleSuccess}/>
+                <SignIn render={!this.state.signUp}/>
+                <SignUp render={this.state.signUp}/>
             </div>
         )
     }
@@ -202,11 +173,8 @@ class SignIn extends React.Component {
         this.setState({processing: true})
 
         const res = await this.performLogin();
-        console.log(res)
         if(res.status !== ActionResult.SUCCESS)
             this.setStatusMessage(res.status)
-        else
-            this.props.handleSuccess(res.data);
 
         this.setState({processing: false})
 
@@ -290,11 +258,8 @@ class SignUp extends React.Component {
         this.setState({processing: true})
 
         const res = await this.performSignUp();
-        console.log(res)
         if(res.status !== ActionResult.SUCCESS)
             this.setStatusMessage(res.status)
-        else
-            this.props.handleSuccess(res.data);
 
         this.setState({processing: false})
     }
@@ -306,7 +271,6 @@ class SignUp extends React.Component {
         if(this.state.password !== this.state.rep_password)
             return {status: ActionResult.PASSWORDS_NOT_MATCHING};
 
-        console.log(1)
         const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if(this.state.email === undefined || !pattern.test(this.state.email))
@@ -343,7 +307,7 @@ class LogoutScreen extends React.Component {
             <div className={styles.logoutScreen}>
                 <div className={styles.sign_title}>Account Optionen</div>
                 <div className={styles.pb}>
-                    <img className={styles.pic} src={this.props.pb}/>
+                    <img className={styles.pic} src={this.props.account["profilePicture"]}/>
                     <div onClick={() => document.getElementById("pic_selector").click()} className={styles.pic_selector_fake}>Ändern</div>
                     <input id="pic_selector" className={styles.pic_selector} type="file" accept="image/png, image/gif, image/jpeg" onChange={(event) => {
                         this.performProfilePicChange(event.target.files[0])
@@ -361,17 +325,12 @@ class LogoutScreen extends React.Component {
     async performProfilePicChange(pic){
 
         const uid = getAuth().currentUser.uid;
-
         await performProfilePicChange(uid, pic);
-        this.props.reloadUser(uid);
 
     }
 
     async performLogout(){
-
         const res = await performLogout();
-        if(res.status === ActionResult.SUCCESS)
-            this.props.handleSuccess();
     }
 
 }
