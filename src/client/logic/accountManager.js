@@ -223,7 +223,7 @@ export async function loadPostCache(){
     const userId = getAuth().currentUser.uid;
     const userData = (await getDoc(doc(collection(db, "accounts"), userId))).data();
     
-    const followers = userData.followers;
+    const followers = userData.followings;
     followers.unshift(userId);
 
     for(var i = 0; i < Math.min(followers.length, 20); i++){

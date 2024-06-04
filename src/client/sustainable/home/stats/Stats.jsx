@@ -2,6 +2,8 @@ import React from "react";
 import styles from "./Stats.module.css"
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { loadTopRanks, retrieveAccountInfo } from "../../../logic/accountManager";
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../logic/init";
 
 
 export default class Stats extends React.Component {
@@ -10,10 +12,11 @@ export default class Stats extends React.Component {
     constructor(props){
         super(props)
 
-        this.state = {rank: "Weit unten"}
+        this.state = {rank: 0}
     }
 
     componentDidMount(){
+
         loadTopRanks().then(topRanks => {
             
             for(var i = 0; i < topRanks.length; i++){
@@ -24,6 +27,21 @@ export default class Stats extends React.Component {
             }
 
         })
+    }
+    
+    componentDidUpdate(prevProps){
+        if(prevProps.postCache !== this.props.postCache && this.props.postCache !== undefined){
+            loadTopRanks().then(topRanks => {
+            
+                for(var i = 0; i < topRanks.length; i++){
+                    if(topRanks[i].uid === getAuth().currentUser.uid){
+                        this.setState({rank: i + 1})
+                        break;
+                    }
+                }
+    
+            })
+        }
     }
 
     render(){

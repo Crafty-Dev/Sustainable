@@ -26,18 +26,22 @@ export default class Sustainable extends React.Component {
                 this.loadAccountData(user.uid)
                 this.stopAccountChangeListener = onSnapshot(doc(collection(db, "accounts"), user.uid), (doc) => {
                     this.changeAccountData(doc.data());
-                    loadPostCache().then(posts => {
-                        this.setState({postCache: posts})
-                    })
+                    this.loadPostCache();
                 })
             } else {
                 if(this.stopAccountChangeListener !== undefined)
                     this.stopAccountChangeListener();
 
-                this.setState({account: undefined})
+                this.setState({account: undefined, postCache: []})
             }
         })
 
+    }
+
+    loadPostCache(){
+        loadPostCache().then(posts => {
+            this.setState({postCache: posts})
+        })
     }
 
     async loadAccountData(userId){
@@ -72,7 +76,7 @@ export default class Sustainable extends React.Component {
                 </div>
                 <div className={styles.content}>
                     <Ranking render={this.state.page === Pages.RANKING}/>
-                    <Home postCache={this.state.postCache} account={this.state.account} render={this.state.page === Pages.HOME}/>
+                    <Home loadPostCache={this.loadPostCache.bind(this)} postCache={this.state.postCache} account={this.state.account} render={this.state.page === Pages.HOME}/>
                     <Info render={this.state.page === Pages.INFORMATION}/>
                     <Account account={this.state.account}/>
                 </div>

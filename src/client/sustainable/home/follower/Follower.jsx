@@ -216,8 +216,10 @@ export class FollowerManager extends React.Component {
         }
 
 
-        if(prevProps.account !== this.props.account && this.props.account !== undefined)
+        if(prevProps.account !== this.props.account && this.props.account !== undefined){
+            if(prevProps.account !== undefined && (prevProps.account.profilePicture !== this.props.account.profilePicture))
             this.performSearch();
+        }
 
     }
 

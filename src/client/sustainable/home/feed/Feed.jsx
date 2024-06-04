@@ -134,7 +134,7 @@ export class PostManager extends React.Component {
 
     componentDidUpdate(prevProps, prevState){
         if(((prevProps.render !== this.props.render && this.props.render) && this.props.account === undefined) || prevProps.account === undefined && this.props.account !== undefined){
-            this.setState({hasImage: false, image: undefined, text: undefined, subtitle: undefined, category: undefined, postId: this.genPostId()});
+            this.setState({hasImage: false, image: undefined, text: undefined, subtitle: undefined, category: undefined, category_q: "", postId: this.genPostId()});
         }
 
         if(prevState.category_q !== this.state.category_q)

@@ -19,6 +19,11 @@ export default class Ranking extends React.Component {
         this.loadTopRanks();
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.render !== this.props.render && this.props.render)
+            this.loadTopRanks();
+    }
+
     async loadTopRanks(){
 
         const entries = [];
